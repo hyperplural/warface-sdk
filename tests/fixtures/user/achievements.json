@@ -1,0 +1,12 @@
+[
+  {
+    "achievement_id": 101,
+    "progress": 100,
+    "completion_time": "2020-01-01T00:00:00Z"
+  },
+  {
+    "achievement_id": 102,
+    "progress": 50,
+    "completion_time": null
+  }
+]

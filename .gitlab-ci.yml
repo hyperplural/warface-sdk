@@ -1,0 +1,42 @@
+stages:
+  - static
+  - test
+
+.composer-cache: &composer-cache
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - vendor/
+
+static:phpstan-phpcs-rector:
+  stage: static
+  image: php:8.3-cli
+  before_script:
+    - apt-get update && apt-get install -y git unzip > /dev/null
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php --install-dir=/usr/local/bin --filename=composer >/dev/null
+    - composer install --no-interaction --no-progress
+  script:
+    - composer run -v test:types
+    - composer run -v test:cs
+    - composer run -v rector:dry
+  <<: *composer-cache
+
+tests:phpunit:
+  stage: test
+  image: php:8.3-cli
+  before_script:
+    - apt-get update && apt-get install -y git unzip > /dev/null
+    - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+    - php composer-setup.php --install-dir=/usr/local/bin --filename=composer >/dev/null
+    - pecl install xdebug >/dev/null && docker-php-ext-enable xdebug
+    - composer install --no-interaction --no-progress
+    - export XDEBUG_MODE=coverage
+  script:
+    - composer run -v test:coverage
+    - composer run -v coverage:check
+  artifacts:
+    when: always
+    paths:
+      - build/coverage/clover.xml
+
