@@ -33,7 +33,17 @@ final class BypassTimeoutResponsePlugin implements Plugin
 
         parse_str($uri->getQuery(), $params);
 
-        $params['name'] = isset($params['name']) && ($params['name'] !== [] && ($params['name'] !== '' && $params['name'] !== '0')) && is_string($params['name']) ? $params['name'] . $code : $code;
+        $params['name'] = isset($params['name']) && (
+            $params['name'] !== []
+            && (
+                $params['name'] !== ''
+                && $params['name'] !== '0'
+            )
+        )
+        && is_string($params['name'])
+            ? $params['name'] . $code
+            : $code;
+
         $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
 
         $request = $request->withUri($uri->withQuery($query));

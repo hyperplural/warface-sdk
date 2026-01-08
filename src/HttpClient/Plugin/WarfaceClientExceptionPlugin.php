@@ -27,7 +27,7 @@ final class WarfaceClientExceptionPlugin implements Plugin
      */
     public function handleRequest(RequestInterface $request, callable $next, callable $first): Promise
     {
-        return $next($request)->then(static function (ResponseInterface $response): \Psr\Http\Message\ResponseInterface {
+        return $next($request)->then(static function (ResponseInterface $response): ResponseInterface {
             $status = $response->getStatusCode();
             switch ($status) {
                 case StatusCodeInterface::STATUS_OK:
