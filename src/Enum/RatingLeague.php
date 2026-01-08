@@ -2,28 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Enum;
+namespace Hyperplural\WarfaceSdk\Enum;
 
-use MyCLabs\Enum\Enum;
-
-/**
- * @method static RatingLeague NONE()
- * @method static RatingLeague ELITE()
- * @method static RatingLeague PLATINUM()
- * @method static RatingLeague GOLDEN()
- * @method static RatingLeague SILVER()
- * @method static RatingLeague BRONZE()
- * @method static RatingLeague STEEL()
- *
- * @extends Enum<string>
- */
-final class RatingLeague extends Enum
+enum RatingLeague: int
 {
-    public const NONE     = 0;
-    public const ELITE    = 1;
-    public const PLATINUM = 2;
-    public const GOLDEN   = 3;
-    public const SILVER   = 4;
-    public const BRONZE   = 5;
-    public const STEEL    = 6;
+    case NONE     = 0;
+    case ELITE    = 1;
+    case PLATINUM = 2;
+    case GOLDEN   = 3;
+    case SILVER   = 4;
+    case BRONZE   = 5;
+    case STEEL    = 6;
 }

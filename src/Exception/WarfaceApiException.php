@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Exception;
+namespace Hyperplural\WarfaceSdk\Exception;
 
 use Exception;
 use Psr\Http\Message\ResponseInterface;
-use Wnull\Warface\HttpClient\Message\ResponseMediator;
-use Wnull\Warface\HttpClient\Message\ResponseMediatorInterface;
+use Hyperplural\WarfaceSdk\HttpClient\Message\ResponseMediator;
+use Hyperplural\WarfaceSdk\HttpClient\Message\ResponseMediatorInterface;
 
 class WarfaceApiException extends Exception
 {

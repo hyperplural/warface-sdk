@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Api;
+namespace Hyperplural\WarfaceSdk\Api;
 
-use Wnull\Warface\Enum\EntityList;
+use Hyperplural\WarfaceSdk\Enum\EntityList;
 
 use function compact;
 
@@ -22,6 +22,6 @@ class User extends AbstractApi implements UserInterface
 
     protected function entity(): EntityList
     {
-        return EntityList::USER();
+        return EntityList::USER;
     }
 }

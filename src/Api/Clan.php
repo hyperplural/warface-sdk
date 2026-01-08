@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Api;
+namespace Hyperplural\WarfaceSdk\Api;
 
-use Wnull\Warface\Enum\EntityList;
+use Hyperplural\WarfaceSdk\Enum\EntityList;
 
 use function compact;
 
@@ -17,6 +17,6 @@ class Clan extends AbstractApi implements ClanInterface
 
     protected function entity(): EntityList
     {
-        return EntityList::CLAN();
+        return EntityList::CLAN;
     }
 }

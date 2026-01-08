@@ -1,8 +1,15 @@
 includes:
+  - phpstan-baseline.neon
 
 parameters:
   level: max
   paths:
     - src/
+    - tests/
+
+  reportUnmatchedIgnoredErrors: true
+  checkGenericClassInNonGenericObjectType: true
+  checkMissingIterableValueType: true
+  checkTooWideReturnTypesInProtectedAndPublicMethods: true
 
   ignoreErrors:

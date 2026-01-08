@@ -2,75 +2,67 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Tests\Api;
+namespace Hyperplural\WarfaceSdk\Tests\Api;
 
-use Wnull\Warface\Api\User;
-use Wnull\Warface\Api\UserInterface;
-use Wnull\Warface\Exception\WarfaceApiException;
+use Hyperplural\WarfaceSdk\Api\User;
+use Hyperplural\WarfaceSdk\Tests\TestCase;
 
-beforeEach(fn () => $this->apiClass = User::class);
-
-it(
-    'can request a user stat',
-    /**
-     * @throws WarfaceApiException
-     */
-    function () {
-        /** @var UserInterface $api */
-        $api = $this->getApi();
+final class UserTest extends TestCase
+{
+    public function testCanRequestUserStat(): void
+    {
+        $this->apiClass = User::class;
+        /** @var \Hyperplural\WarfaceSdk\Api\User $api */
+        $api = $this->getApiWithFixture('user/stat.json');
 
         $name = 'ГрозовоеОблако';
         $element = $api->stat($name);
 
-        expect($element)
-            ->toHaveKey('user_id')
-            ->toHaveKey('nickname', $name)
-            ->toHaveKey('experience')
-            ->toHaveKey('rank_id')
-            // Field is_transparent deprecated (is not public)
-//            ->toHaveKey('is_transparent')
-            ->toHaveKey('kill')
-            ->toHaveKey('friendly_kills')
-            ->toHaveKey('kills')
-            ->toHaveKey('death')
-            ->toHaveKey('pvp')
-            ->toHaveKey('pve_kill')
-            ->toHaveKey('pve_friendly_kills')
-            ->toHaveKey('pve_kills')
-            ->toHaveKey('pve_death')
-            ->toHaveKey('pve')
-            ->toHaveKey('playtime')
-            ->toHaveKey('playtime_h')
-            ->toHaveKey('playtime_m')
-            ->toHaveKey('favoritPVP')
-            ->toHaveKey('favoritPVE')
-            ->toHaveKey('pve_wins')
-            ->toHaveKey('pvp_wins')
-            ->toHaveKey('pvp_lost')
-            ->toHaveKey('pve_lost')
-            ->toHaveKey('pve_all')
-            ->toHaveKey('pvp_all')
-            ->toHaveKey('pvpwl')
-            ->toHaveKey('full_response');
+        $this->assertIsArray($element);
+        $this->assertArrayHasKey('user_id', $element);
+        $this->assertArrayHasKey('nickname', $element);
+        $this->assertSame($name, $element['nickname']);
+        $this->assertArrayHasKey('experience', $element);
+        $this->assertArrayHasKey('rank_id', $element);
+        $this->assertArrayHasKey('kill', $element);
+        $this->assertArrayHasKey('friendly_kills', $element);
+        $this->assertArrayHasKey('kills', $element);
+        $this->assertArrayHasKey('death', $element);
+        $this->assertArrayHasKey('pvp', $element);
+        $this->assertArrayHasKey('pve_kill', $element);
+        $this->assertArrayHasKey('pve_friendly_kills', $element);
+        $this->assertArrayHasKey('pve_kills', $element);
+        $this->assertArrayHasKey('pve_death', $element);
+        $this->assertArrayHasKey('pve', $element);
+        $this->assertArrayHasKey('playtime', $element);
+        $this->assertArrayHasKey('playtime_h', $element);
+        $this->assertArrayHasKey('playtime_m', $element);
+        $this->assertArrayHasKey('favoritPVP', $element);
+        $this->assertArrayHasKey('favoritPVE', $element);
+        $this->assertArrayHasKey('pve_wins', $element);
+        $this->assertArrayHasKey('pvp_wins', $element);
+        $this->assertArrayHasKey('pvp_lost', $element);
+        $this->assertArrayHasKey('pve_lost', $element);
+        $this->assertArrayHasKey('pve_all', $element);
+        $this->assertArrayHasKey('pvp_all', $element);
+        $this->assertArrayHasKey('pvpwl', $element);
+        $this->assertArrayHasKey('full_response', $element);
     }
-);
 
-it(
-    'can request a user achievements',
-    /**
-     * @throws WarfaceApiException
-     */
-    function () {
-        /** @var UserInterface $api */
-        $api = $this->getApi();
+    public function testCanRequestUserAchievements(): void
+    {
+        $this->apiClass = User::class;
+        /** @var \Hyperplural\WarfaceSdk\Api\User $api */
+        $api = $this->getApiWithFixture('user/achievements.json');
 
         $name = 'ГрозовоеОблако';
-        $element = $this->getRandomElement($api->achievements($name));
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $api->achievements($name);
+        $element = $this->getRandomElement($list);
 
-        expect($element)
-            ->toHaveKey('achievement_id')
-            ->toHaveKey('progress')
-            ->toHaveKey('completion_time');
+        $this->assertIsArray($element);
+        $this->assertArrayHasKey('achievement_id', $element);
+        $this->assertArrayHasKey('progress', $element);
+        $this->assertArrayHasKey('completion_time', $element);
     }
-);
-
+}

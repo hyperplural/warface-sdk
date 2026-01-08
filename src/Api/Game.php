@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Api;
+namespace Hyperplural\WarfaceSdk\Api;
 
-use Wnull\Warface\Enum\EntityList;
+use Hyperplural\WarfaceSdk\Enum\EntityList;
 
 class Game extends AbstractApi implements GameInterface
 {
@@ -15,6 +15,6 @@ class Game extends AbstractApi implements GameInterface
 
     protected function entity(): EntityList
     {
-        return EntityList::GAME();
+        return EntityList::GAME;
     }
 }

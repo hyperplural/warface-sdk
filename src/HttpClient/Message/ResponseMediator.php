@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\HttpClient\Message;
+namespace Hyperplural\WarfaceSdk\HttpClient\Message;
 
 use JsonException;
 use Psr\Http\Message\ResponseInterface;
@@ -13,7 +13,7 @@ use const JSON_THROW_ON_ERROR;
 
 final class ResponseMediator implements ResponseMediatorInterface
 {
-    private ResponseInterface $response;
+    private readonly ResponseInterface $response;
 
     public function __construct(ResponseInterface $response)
     {

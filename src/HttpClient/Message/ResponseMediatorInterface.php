@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\HttpClient\Message;
+namespace Hyperplural\WarfaceSdk\HttpClient\Message;
 
 use Psr\Http\Message\ResponseInterface;
 

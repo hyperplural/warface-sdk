@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\HttpClient;
+namespace Hyperplural\WarfaceSdk\HttpClient;
 
 use Http\Client\Common\HttpMethodsClient;
 use Http\Client\Common\HttpMethodsClientInterface;
@@ -15,8 +15,8 @@ use Psr\Http\Message\RequestFactoryInterface;
 
 final class ClientBuilder
 {
-    private ClientInterface $httpClient;
-    private RequestFactoryInterface $requestFactory;
+    private readonly ClientInterface $httpClient;
+    private readonly RequestFactoryInterface $requestFactory;
 
     /**
      * @var array<int, Plugin>

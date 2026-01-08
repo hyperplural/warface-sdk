@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Api;
+namespace Hyperplural\WarfaceSdk\Api;
 
-use Wnull\Warface\Enum\GameClass;
-use Wnull\Warface\Enum\RatingLeague;
-use Wnull\Warface\Exception\WarfaceApiException;
+use Hyperplural\WarfaceSdk\Enum\GameClass;
+use Hyperplural\WarfaceSdk\Enum\RatingLeague;
+use Hyperplural\WarfaceSdk\Exception\WarfaceApiException;
 
 interface RatingInterface
 {

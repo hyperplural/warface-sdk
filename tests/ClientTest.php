@@ -2,25 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Tests;
+namespace Hyperplural\WarfaceSdk\Tests;
 
-use Wnull\Warface\Api\Achievement;
-use Wnull\Warface\Api\ClanInterface;
-use Wnull\Warface\Api\GameInterface;
-use Wnull\Warface\Api\RatingInterface;
-use Wnull\Warface\Api\UserInterface;
-use Wnull\Warface\Api\WeaponInterface;
-use Wnull\Warface\Client;
-use Wnull\Warface\Enum\RegionEnum;
+use Hyperplural\WarfaceSdk\Api\Achievement;
+use Hyperplural\WarfaceSdk\Api\ClanInterface;
+use Hyperplural\WarfaceSdk\Api\GameInterface;
+use Hyperplural\WarfaceSdk\Api\RatingInterface;
+use Hyperplural\WarfaceSdk\Api\UserInterface;
+use Hyperplural\WarfaceSdk\Client;
+use PHPUnit\Framework\TestCase;
 
-it('gets instances from the client', function () {
-    $client = new Client(null, RegionEnum::CIS());
+final class ClientTest extends TestCase
+{
+    public function testGetsInstancesFromTheClient(): void
+    {
+        $client = new Client();
 
-    expect($client->achievement())
-        ->toBeInstanceOf(Achievement::class)
-        ->and($client->clan())->toBeInstanceOf(ClanInterface::class)
-        ->and($client->game())->toBeInstanceOf(GameInterface::class)
-        ->and($client->rating())->toBeInstanceOf(RatingInterface::class)
-        ->and($client->user())->toBeInstanceOf(UserInterface::class)
-        ->and($client->weapon())->toBeInstanceOf(WeaponInterface::class);
-});
+        $this->assertInstanceOf(Achievement::class, $client->achievement());
+        $this->assertInstanceOf(ClanInterface::class, $client->clan());
+        $this->assertInstanceOf(GameInterface::class, $client->game());
+        $this->assertInstanceOf(RatingInterface::class, $client->rating());
+        $this->assertInstanceOf(UserInterface::class, $client->user());
+    }
+}

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Exception;
+namespace Hyperplural\WarfaceSdk\Exception;
 
 class ApiResponseErrorException extends WarfaceApiException
 {

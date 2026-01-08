@@ -2,19 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\HttpClient\Plugin;
+namespace Hyperplural\WarfaceSdk\HttpClient\Plugin;
 
 use Fig\Http\Message\StatusCodeInterface;
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Wnull\Warface\Exception\ApiResponseErrorException;
-use Wnull\Warface\Exception\BadRequestException;
-use Wnull\Warface\Exception\InternalServerErrorException;
-use Wnull\Warface\Exception\NotFoundException;
-use Wnull\Warface\Exception\WarfaceApiException;
-use Wnull\Warface\HttpClient\Message\ResponseMediator;
+use Hyperplural\WarfaceSdk\Exception\ApiResponseErrorException;
+use Hyperplural\WarfaceSdk\Exception\BadRequestException;
+use Hyperplural\WarfaceSdk\Exception\InternalServerErrorException;
+use Hyperplural\WarfaceSdk\Exception\NotFoundException;
+use Hyperplural\WarfaceSdk\Exception\WarfaceApiException;
+use Hyperplural\WarfaceSdk\HttpClient\Message\ResponseMediator;
 use JsonException;
 
 use function str_contains;
@@ -34,6 +34,7 @@ final class WarfaceClientExceptionPlugin implements Plugin
                     // Do nothing
                     break;
                 case StatusCodeInterface::STATUS_BAD_REQUEST:
+                    $message = null;
                     if (str_contains($response->getHeaderLine('Content-Type'), 'application/json')) {
                         /** @var array{message: string, code: int} $body */
                         $body = (new ResponseMediator($response))->getBodyContentsDecode();

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Api;
+namespace Hyperplural\WarfaceSdk\Api;
 
-use Wnull\Warface\Exception\WarfaceApiException;
+use Hyperplural\WarfaceSdk\Exception\WarfaceApiException;
 
 interface UserInterface
 {

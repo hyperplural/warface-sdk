@@ -2,29 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Tests\Api;
+namespace Hyperplural\WarfaceSdk\Tests\Api;
 
-use Wnull\Warface\Api\Clan;
-use Wnull\Warface\Api\ClanInterface;
-use Wnull\Warface\Exception\WarfaceApiException;
+use Hyperplural\WarfaceSdk\Api\Clan;
+use Hyperplural\WarfaceSdk\Tests\TestCase;
 
-beforeEach(fn () => $this->apiClass = Clan::class);
-
-it(
-    'can request a clan members',
-    /**
-     * @throws WarfaceApiException
-     */
-    function () {
-        /** @var ClanInterface $api */
-        $api = $this->getApi();
+final class ClanTest extends TestCase
+{
+    public function testCanRequestClanMembers(): void
+    {
+        $this->apiClass = Clan::class;
+        /** @var \Hyperplural\WarfaceSdk\Api\Clan $api */
+        $api = $this->getApiWithFixture('clan/members.json');
 
         $clan = '1337';
         $element = $api->members($clan);
 
-        expect($element)
-            ->toHaveKey('id')
-            ->toHaveKey('name', $clan)
-            ->toHaveKey('members');
+        $this->assertIsArray($element);
+        $this->assertArrayHasKey('id', $element);
+        $this->assertArrayHasKey('name', $element);
+        $this->assertSame($clan, $element['name']);
+        $this->assertArrayHasKey('members', $element);
     }
-);
+}

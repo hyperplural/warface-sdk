@@ -2,75 +2,67 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Tests\Api;
+namespace Hyperplural\WarfaceSdk\Tests\Api;
 
-use Wnull\Warface\Api\Rating;
-use Wnull\Warface\Api\RatingInterface;
-use Wnull\Warface\Enum\GameClass;
-use Wnull\Warface\Enum\RatingLeague;
-use Wnull\Warface\Exception\WarfaceApiException;
-use function expect;
-use function it;
+use Hyperplural\WarfaceSdk\Api\Rating;
+use Hyperplural\WarfaceSdk\Enum\GameClass;
+use Hyperplural\WarfaceSdk\Enum\RatingLeague;
+use Hyperplural\WarfaceSdk\Tests\TestCase;
 
-beforeEach(fn () => $this->apiClass = Rating::class);
+final class RatingTest extends TestCase
+{
+    public function testCanRequestRatingClan(): void
+    {
+        $this->apiClass = Rating::class;
+        /** @var \Hyperplural\WarfaceSdk\Api\Rating $api */
+        $api = $this->getApiWithFixture('rating/clan.json');
 
-it(
-    'can request a rating clan',
-    /**
-     * @throws WarfaceApiException
-     */
-    function () {
-        /** @var RatingInterface $api */
-        $api = $this->getApi();
-
-        $element = $this->getRandomElement($api->clan());
-
-        expect($element)
-            ->toHaveKey('clan')
-            ->toHaveKey('clan_leader')
-            ->toHaveKey('points')
-            ->toHaveKey('rank');
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $api->clan();
+        $element = $this->getRandomElement($list);
+        $this->assertIsArray($element);
+        $this->assertArrayHasKey('clan', $element);
+        $this->assertArrayHasKey('clan_leader', $element);
+        $this->assertArrayHasKey('points', $element);
+        $this->assertArrayHasKey('rank', $element);
     }
-);
 
-it(
-    'can request a rating monthly',
-    /**
-     * @throws WarfaceApiException
-     */
-    function () {
-        /** @var RatingInterface $api */
-        $api = $this->getApi();
+    public function testCanRequestRatingMonthly(): void
+    {
+        $this->apiClass = Rating::class;
+        /** @var \Hyperplural\WarfaceSdk\Api\Rating $api */
+        $api = $this->getApiWithFixture('rating/monthly_elite.json');
 
-        $league = RatingLeague::ELITE();
-        $element = $this->getRandomElement($api->monthly('', $league));
+        $league = RatingLeague::ELITE;
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $api->monthly('', $league);
+        $element = $this->getRandomElement($list);
 
-        expect($element)
-            ->toHaveKey('clan')
-            ->toHaveKey('clan_leader')
-            ->toHaveKey('members')
-            ->toHaveKey('points')
-            ->toHaveKey('rank')
-            ->toHaveKey('rank_change');
+        $this->assertIsArray($element);
+        $this->assertArrayHasKey('clan', $element);
+        $this->assertArrayHasKey('clan_leader', $element);
+        $this->assertArrayHasKey('members', $element);
+        $this->assertArrayHasKey('points', $element);
+        $this->assertArrayHasKey('rank', $element);
+        $this->assertArrayHasKey('rank_change', $element);
     }
-);
 
-it(
-    'can request a rating top100',
-    /**
-     * @throws WarfaceApiException
-     */
-    function () {
-        /** @var RatingInterface $api */
-        $api = $this->getApi();
+    public function testCanRequestRatingTop100(): void
+    {
+        $this->apiClass = Rating::class;
+        /** @var \Hyperplural\WarfaceSdk\Api\Rating $api */
+        $api = $this->getApiWithFixture('rating/top100_sniper.json');
 
-        $class = GameClass::SNIPER();
-        $element = $this->getRandomElement($api->top100($class));
+        $class = GameClass::SNIPER;
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $api->top100($class);
+        $element = $this->getRandomElement($list);
 
-        expect($element)
-            ->toHaveKey('nickname')
-            ->toHaveKey('clan')
-            ->toHaveKey('class', $class->getValue())
-            ->toHaveKey('shard');
+        $this->assertIsArray($element);
+        $this->assertArrayHasKey('nickname', $element);
+        $this->assertArrayHasKey('clan', $element);
+        $this->assertArrayHasKey('class', $element);
+        $this->assertSame($class->value, $element['class']);
+        $this->assertArrayHasKey('shard', $element);
     }
-);
+}

@@ -2,27 +2,25 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Tests\Api;
+namespace Hyperplural\WarfaceSdk\Tests\Api;
 
-use Wnull\Warface\Api\Achievement;
-use Wnull\Warface\Api\AchievementInterface;
-use Wnull\Warface\Exception\WarfaceApiException;
+use Hyperplural\WarfaceSdk\Api\Achievement;
+use Hyperplural\WarfaceSdk\Tests\TestCase;
 
-beforeEach(fn () => $this->apiClass = Achievement::class);
+final class AchievementTest extends TestCase
+{
+    public function testCanRequestCatalogOfAchievements(): void
+    {
+        $this->apiClass = Achievement::class;
+        /** @var \Hyperplural\WarfaceSdk\Api\Achievement $api */
+        $api = $this->getApiWithFixture('achievement/catalog.json');
 
-it(
-    'can request a catalog of achievements',
-    /**
-     * @throws WarfaceApiException
-     */
-    function () {
-        /** @var AchievementInterface $api */
-        $api = $this->getApi();
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $api->catalog();
+        $element = $this->getRandomElement($list);
 
-        $element = $this->getRandomElement($api->catalog());
-
-        expect($element)
-            ->toHaveKey('id')
-            ->toHaveKey('name');
+        $this->assertIsArray($element);
+        $this->assertArrayHasKey('id', $element);
+        $this->assertArrayHasKey('name', $element);
     }
-);
+}
