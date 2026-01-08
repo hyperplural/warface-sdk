@@ -2,28 +2,26 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Tests\Api;
+namespace Hyperplural\WarfaceSdk\Tests\Api;
 
-use Wnull\Warface\Api\GameInterface;
-use Wnull\Warface\Api\Game;
-use Wnull\Warface\Exception\WarfaceApiException;
+use Hyperplural\WarfaceSdk\Api\Game;
+use Hyperplural\WarfaceSdk\Tests\TestCase;
 
-beforeEach(fn () => $this->apiClass = Game::class);
+final class GameTest extends TestCase
+{
+    public function testCanRequestGameMissions(): void
+    {
+        $this->apiClass = Game::class;
+        /** @var \Hyperplural\WarfaceSdk\Api\Game $api */
+        $api = $this->getApiWithFixture('game/missions.json');
 
-it(
-    'can request a game missions',
-    /**
-     * @throws WarfaceApiException
-     */
-    function () {
-        /** @var GameInterface $api */
-        $api = $this->getApi();
+        /** @var array<int, array<string, mixed>> $list */
+        $list = $api->missions();
+        $element = $this->getRandomElement($list);
 
-        $element = $this->getRandomElement($api->missions());
-
-        expect($element)
-            ->toHaveKey('game_mode')
-            ->toHaveKey('name')
-            ->toHaveKey('mission_type');
+        $this->assertIsArray($element);
+        $this->assertArrayHasKey('game_mode', $element);
+        $this->assertArrayHasKey('name', $element);
+        $this->assertArrayHasKey('mission_type', $element);
     }
-);
+}

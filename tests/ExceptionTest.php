@@ -2,31 +2,39 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Tests;
+namespace Hyperplural\WarfaceSdk\Tests;
 
-use Wnull\Warface\Client;
-use Wnull\Warface\Enum\RegionEnum;
-use Wnull\Warface\Exception\BadRequestException;
-use Wnull\Warface\Exception\InvalidApiEndpointException;
-use Wnull\Warface\Exception\WarfaceApiException;
-use function it;
+use GuzzleHttp\Psr7\Response;
+use Hyperplural\WarfaceSdk\Client;
+use Hyperplural\WarfaceSdk\Exception\BadRequestException;
+use Hyperplural\WarfaceSdk\Exception\InvalidApiEndpointException;
+use PHPUnit\Framework\TestCase;
 
-it(
-    'throws invalid api endpoint exception',
-    function () {
-        (new Client(null, RegionEnum::CIS()))->test();
-    },
-)->throws(
-    InvalidApiEndpointException::class,
-    'Call unknown entity'
-);
+final class ExceptionTest extends TestCase
+{
+    public function testThrowsInvalidApiEndpointException(): void
+    {
+        $this->expectException(InvalidApiEndpointException::class);
+        $this->expectExceptionMessage('Call unknown entity');
 
-it(
-    'throws bad request user not found',
-    function () {
-        (new Client(null, RegionEnum::CIS()))->user()->stat('');
-    },
-)->throws(
-    BadRequestException::class,
-    'Пользователь не найден'
-);
+        // @phpstan-ignore-next-line calling unknown endpoint to trigger exception
+        (new Client())->test();
+    }
+
+    public function testThrowsBadRequestUserNotFound(): void
+    {
+        $this->expectException(BadRequestException::class);
+        $this->expectExceptionMessage('Пользователь не найден');
+
+        $mock = new \Http\Mock\Client();
+        $mock->addResponse(
+            new Response(
+                400,
+                ['Content-Type' => 'application/json'],
+                '{"message":"Пользователь не найден","code":400}'
+            )
+        );
+
+        Client::createWithHttpClient($mock)->user()->stat('');
+    }
+}

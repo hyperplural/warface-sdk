@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Api;
+namespace Hyperplural\WarfaceSdk\Api;
 
-use Wnull\Warface\Enum\EntityList;
+use Hyperplural\WarfaceSdk\Enum\EntityList;
 
 class Achievement extends AbstractApi implements AchievementInterface
 {
@@ -15,6 +15,6 @@ class Achievement extends AbstractApi implements AchievementInterface
 
     protected function entity(): EntityList
     {
-        return EntityList::ACHIEVEMENT();
+        return EntityList::ACHIEVEMENT;
     }
 }

@@ -2,24 +2,21 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Api;
+namespace Hyperplural\WarfaceSdk\Api;
 
 use Fig\Http\Message\RequestMethodInterface;
 use Psr\Http\Client\ClientExceptionInterface;
-use Wnull\Warface\Client;
-use Wnull\Warface\Enum\EntityList;
-use Wnull\Warface\Exception\ApiResponseErrorException;
-use Wnull\Warface\Exception\WarfaceApiException;
-use Wnull\Warface\HttpClient\Message\ResponseMediator;
-use Wnull\Warface\HttpClient\Message\ResponseMediatorInterface;
+use Hyperplural\WarfaceSdk\Client;
+use Hyperplural\WarfaceSdk\Enum\EntityList;
+use Hyperplural\WarfaceSdk\Exception\ApiResponseErrorException;
+use Hyperplural\WarfaceSdk\Exception\WarfaceApiException;
+use Hyperplural\WarfaceSdk\HttpClient\Message\ResponseMediator;
+use Hyperplural\WarfaceSdk\HttpClient\Message\ResponseMediatorInterface;
 
 abstract class AbstractApi
 {
-    protected Client $client;
-
-    public function __construct(Client $client)
+    public function __construct(protected readonly Client $client)
     {
-        $this->client = $client;
     }
 
     abstract protected function entity(): EntityList;
@@ -31,7 +28,7 @@ abstract class AbstractApi
      */
     protected function getByMethod(string $method, array $params = []): array
     {
-        $path = $this->entity()->getValue() . '/' . $method;
+        $path = $this->entity()->value . '/' . $method;
 
         return $this->get($path, $params)->getBodyContentsDecode();
     }
@@ -42,8 +39,8 @@ abstract class AbstractApi
      */
     protected function get(string $path, array $parameters): ResponseMediatorInterface
     {
-        if (count($parameters) > 0) {
-            $path .= '?' . http_build_query($parameters);
+        if ($parameters !== []) {
+            $path .= '?' . http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
         }
 
         return $this->sendRequest(RequestMethodInterface::METHOD_GET, $path);
@@ -58,8 +55,11 @@ abstract class AbstractApi
             return new ResponseMediator(
                 $this->client->getHttpClient()->send($method, $uri)
             );
+        // Transport-level errors are turned into a domain exception.
+        // @codeCoverageIgnoreStart
         } catch (ClientExceptionInterface $e) {
             throw new ApiResponseErrorException($e->getMessage(), $e->getCode());
         }
+        // @codeCoverageIgnoreEnd
     }
 }

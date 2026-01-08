@@ -2,26 +2,14 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\Enum;
+namespace Hyperplural\WarfaceSdk\Enum;
 
-use MyCLabs\Enum\Enum;
-
-/**
- * @method static GameClass NONE()
- * @method static GameClass RIFLEMAN()
- * @method static GameClass MEDIC()
- * @method static GameClass ENGINEER()
- * @method static GameClass SNIPER()
- * @method static GameClass SED()
- *
- * @extends Enum<string>
- */
-final class GameClass extends Enum
+enum GameClass: int
 {
-    public const NONE     = 0;
-    public const RIFLEMAN = 1;
-    public const MEDIC    = 2;
-    public const ENGINEER = 3;
-    public const SNIPER   = 4;
-    public const SED      = 5;
+    case NONE     = 0;
+    case RIFLEMAN = 1;
+    case MEDIC    = 2;
+    case ENGINEER = 3;
+    case SNIPER   = 4;
+    case SED      = 5;
 }

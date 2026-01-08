@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface;
+namespace Hyperplural\WarfaceSdk;
 
 use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\AddHostPlugin;
@@ -10,26 +10,23 @@ use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\UriInterface;
-use Wnull\Warface\Api\AbstractApi;
-use Wnull\Warface\Api\Achievement;
-use Wnull\Warface\Api\AchievementInterface;
-use Wnull\Warface\Api\Clan;
-use Wnull\Warface\Api\ClanInterface;
-use Wnull\Warface\Api\Game;
-use Wnull\Warface\Api\GameInterface;
-use Wnull\Warface\Api\Rating;
-use Wnull\Warface\Api\RatingInterface;
-use Wnull\Warface\Api\User;
-use Wnull\Warface\Api\UserInterface;
-use Wnull\Warface\Api\Weapon;
-use Wnull\Warface\Api\WeaponInterface;
-use Wnull\Warface\Enum\EntityList;
-use Wnull\Warface\Enum\HostList;
-use Wnull\Warface\Enum\RegionEnum;
-use Wnull\Warface\Exception\InvalidApiEndpointException;
-use Wnull\Warface\HttpClient\ClientBuilder;
-use Wnull\Warface\HttpClient\Plugin\BypassTimeoutResponsePlugin;
-use Wnull\Warface\HttpClient\Plugin\WarfaceClientExceptionPlugin;
+use Hyperplural\WarfaceSdk\Api\AbstractApi;
+use Hyperplural\WarfaceSdk\Api\Achievement;
+use Hyperplural\WarfaceSdk\Api\AchievementInterface;
+use Hyperplural\WarfaceSdk\Api\Clan;
+use Hyperplural\WarfaceSdk\Api\ClanInterface;
+use Hyperplural\WarfaceSdk\Api\Game;
+use Hyperplural\WarfaceSdk\Api\GameInterface;
+use Hyperplural\WarfaceSdk\Api\Rating;
+use Hyperplural\WarfaceSdk\Api\RatingInterface;
+use Hyperplural\WarfaceSdk\Api\User;
+use Hyperplural\WarfaceSdk\Api\UserInterface;
+use Hyperplural\WarfaceSdk\Enum\EntityList;
+use Hyperplural\WarfaceSdk\Enum\HostList;
+use Hyperplural\WarfaceSdk\Exception\InvalidApiEndpointException;
+use Hyperplural\WarfaceSdk\HttpClient\ClientBuilder;
+use Hyperplural\WarfaceSdk\HttpClient\Plugin\BypassTimeoutResponsePlugin;
+use Hyperplural\WarfaceSdk\HttpClient\Plugin\WarfaceClientExceptionPlugin;
 
 /**
  * @method AchievementInterface achievement() Achievement branch
@@ -37,29 +34,24 @@ use Wnull\Warface\HttpClient\Plugin\WarfaceClientExceptionPlugin;
  * @method GameInterface game() Game branch
  * @method RatingInterface rating() Rating branch
  * @method UserInterface user() User branch
- * @method WeaponInterface weapon() Weapon branch
  */
 final class Client
 {
-    private ClientBuilder $httpClientBuilder;
+    private readonly ClientBuilder $httpClientBuilder;
 
-    public function __construct(ClientBuilder $httpClientBuilder = null, RegionEnum $region = null)
+    public function __construct(ClientBuilder $httpClientBuilder = null)
     {
         $this->httpClientBuilder = $builder = $httpClientBuilder ?? new ClientBuilder();
 
-        // Set API host depending on the region
-        $host = ($region ?? RegionEnum::CIS())->getValue() === RegionEnum::CIS
-            ? HostList::CIS()
-            : HostList::INTERNATIONAL();
+        // Set API host (CIS)
+        $builder->addPlugin(new AddHostPlugin($this->makeHostUri(HostList::CIS)));
 
-        $builder->addPlugin(new AddHostPlugin($this->makeHostUri($host)));
-
-        // For CIS region
+        // Always bypass API timeout logic by default
         $builder->addPlugin(new BypassTimeoutResponsePlugin());
 
         $builder->addPlugin(
             new HeaderDefaultsPlugin([
-                'User-Agent' => 'Warface SDK Client; version 5',
+                'User-Agent' => 'Hyperplural Warface SDK (PHP)',
             ])
         );
 
@@ -72,29 +64,21 @@ final class Client
      */
     public function __call(string $entity, array $args = []): AbstractApi
     {
-        switch ($entity) {
-            case EntityList::ACHIEVEMENT:
-                return new Achievement($this);
-            case EntityList::CLAN:
-                return new Clan($this);
-            case EntityList::GAME:
-                return new Game($this);
-            case EntityList::RATING:
-                return new Rating($this);
-            case EntityList::USER:
-                return new User($this);
-            case EntityList::WEAPON:
-                return new Weapon($this);
-            default:
-                throw new InvalidApiEndpointException('Call unknown entity');
-        }
+        return match ($entity) {
+            EntityList::ACHIEVEMENT->value => new Achievement($this),
+            EntityList::CLAN->value        => new Clan($this),
+            EntityList::GAME->value        => new Game($this),
+            EntityList::RATING->value      => new Rating($this),
+            EntityList::USER->value        => new User($this),
+            default                 => throw new InvalidApiEndpointException('Call unknown entity'),
+        };
     }
 
-    public static function createWithHttpClient(ClientInterface $httpClient, RegionEnum $region = null): self
+    public static function createWithHttpClient(ClientInterface $httpClient): self
     {
         $builder = new ClientBuilder($httpClient);
 
-        return new self($builder, $region);
+        return new self($builder);
     }
 
     public function getHttpClient(): HttpMethodsClientInterface
@@ -109,6 +93,6 @@ final class Client
 
     private function makeHostUri(HostList $host): UriInterface
     {
-        return Psr17FactoryDiscovery::findUriFactory()->createUri('https://' . $host->getValue());
+        return Psr17FactoryDiscovery::findUriFactory()->createUri('https://' . $host->value);
     }
 }

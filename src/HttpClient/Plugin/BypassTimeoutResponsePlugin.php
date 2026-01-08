@@ -2,13 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Wnull\Warface\HttpClient\Plugin;
+namespace Hyperplural\WarfaceSdk\HttpClient\Plugin;
 
 use Exception;
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
-use Wnull\Warface\Enum\HostList;
 
 use function bin2hex;
 use function http_build_query;
@@ -17,10 +16,8 @@ use function parse_str;
 use function random_bytes;
 
 /**
- * A request control system is enabled for the CIS region. Two or more identical requests running in a row cause
- * a long response or timeout from the API.
- *
- * This plugin bypasses the API logic due to a vulnerability in nginx.
+ * Later identical requests can lead to long responses or timeouts from the API.
+ * This plugin appends a random suffix to the `name` query parameter to bypass that behavior.
  */
 final class BypassTimeoutResponsePlugin implements Plugin
 {
@@ -31,17 +28,25 @@ final class BypassTimeoutResponsePlugin implements Plugin
     {
         $uri = $request->getUri();
 
-        if ($uri->getHost() === HostList::CIS) {
-            $code = '<' . bin2hex(random_bytes(32));
-            $params = [];
+        $code = '<' . bin2hex(random_bytes(32));
+        $params = [];
 
-            parse_str($uri->getQuery(), $params);
+        parse_str($uri->getQuery(), $params);
 
-            $params['name'] = !empty($params['name']) && is_string($params['name']) ? $params['name'] . $code : $code;
-            $query = http_build_query($params);
+        $params['name'] = isset($params['name']) && (
+            $params['name'] !== []
+            && (
+                $params['name'] !== ''
+                && $params['name'] !== '0'
+            )
+        )
+        && is_string($params['name'])
+            ? $params['name'] . $code
+            : $code;
 
-            $request = $request->withUri($uri->withQuery($query));
-        }
+        $query = http_build_query($params, '', '&', PHP_QUERY_RFC3986);
+
+        $request = $request->withUri($uri->withQuery($query));
 
         return $next($request);
     }
