@@ -37,8 +37,8 @@ $clan = $client->clan()->members('ClanName');
 $missions = $client->game()->missions();
 
 // Ratings
-$monthly = $client->rating()->monthly('', RatingLeague::ELITE());
-$top100 = $client->rating()->top100(GameClass::MEDIC());
+$monthly = $client->rating()->monthly('', RatingLeague::ELITE);
+$top100 = $client->rating()->top100(GameClass::MEDIC);
 ```
 
 ## Custom HTTP client
