@@ -12,7 +12,7 @@ class Clan extends AbstractApi implements ClanInterface
 {
     public function members(string $clan): array
     {
-        return $this->getByMethod(__FUNCTION__, compact('clan'));
+        return $this->getByMethod(__FUNCTION__, ['clan' => $clan]);
     }
 
     protected function entity(): EntityList

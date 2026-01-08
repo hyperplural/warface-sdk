@@ -39,4 +39,3 @@ tests:phpunit:
     when: always
     paths:
       - build/coverage/clover.xml
-

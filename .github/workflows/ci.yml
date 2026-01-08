@@ -53,3 +53,6 @@ jobs:
       - name: Coverage threshold check (100%)
         if: matrix.php == '8.3'
         run: composer run -v coverage:check
+      - name: Rector (dry-run)
+        if: matrix.php == '8.3'
+        run: composer run -v rector:dry

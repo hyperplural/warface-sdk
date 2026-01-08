@@ -28,7 +28,7 @@ final class BypassTimeoutResponsePluginTest extends TestCase
         $this->assertArrayHasKey('name', $params);
         $this->assertIsString($params['name']);
         $this->assertTrue(str_starts_with($params['name'], 'Nick'));
-        $this->assertGreaterThan(strlen('Nick'), strlen((string) $params['name']));
+        $this->assertGreaterThan(strlen('Nick'), strlen($params['name']));
     }
 
     public function testAddsNameWhenAbsent(): void

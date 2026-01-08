@@ -13,11 +13,8 @@ use const JSON_THROW_ON_ERROR;
 
 final class ResponseMediator implements ResponseMediatorInterface
 {
-    private readonly ResponseInterface $response;
-
-    public function __construct(ResponseInterface $response)
+    public function __construct(private readonly ResponseInterface $response)
     {
-        $this->response = $response;
     }
 
     public function getResponse(): ResponseInterface

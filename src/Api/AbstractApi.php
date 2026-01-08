@@ -15,11 +15,8 @@ use Hyperplural\WarfaceSdk\HttpClient\Message\ResponseMediatorInterface;
 
 abstract class AbstractApi
 {
-    protected readonly Client $client;
-
-    public function __construct(Client $client)
+    public function __construct(protected readonly Client $client)
     {
-        $this->client = $client;
     }
 
     abstract protected function entity(): EntityList;
@@ -42,7 +39,7 @@ abstract class AbstractApi
      */
     protected function get(string $path, array $parameters): ResponseMediatorInterface
     {
-        if (count($parameters) > 0) {
+        if ($parameters !== []) {
             $path .= '?' . http_build_query($parameters, '', '&', PHP_QUERY_RFC3986);
         }
 

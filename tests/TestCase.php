@@ -52,7 +52,7 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
      */
     protected function getRandomElement(array $data): mixed
     {
-        if (empty($data)) {
+        if ($data === []) {
             return null;
         }
 

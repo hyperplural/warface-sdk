@@ -21,14 +21,14 @@ class Rating extends AbstractApi implements RatingInterface
     {
         $league = ($league ?? RatingLeague::NONE)->value;
 
-        return $this->getByMethod(__FUNCTION__, compact('clan', 'league', 'page'));
+        return $this->getByMethod(__FUNCTION__, ['clan' => $clan, 'league' => $league, 'page' => $page]);
     }
 
     public function top100(?GameClass $class = null): array
     {
         $class = ($class ?? GameClass::NONE)->value;
 
-        return $this->getByMethod(__FUNCTION__, compact('class'));
+        return $this->getByMethod(__FUNCTION__, ['class' => $class]);
     }
 
     protected function entity(): EntityList
